@@ -42,6 +42,9 @@
       <input id="q" type="search" placeholder="Search tests, endpoints…" autocomplete="off" spellcheck="false">
       <kbd class="kbd-hint" aria-hidden="true">/</kbd>
     </div>
+    <details class="filters">
+      <summary><span>Filters</span><span class="f-dot" aria-hidden="true"></span><span class="chev" aria-hidden="true"></span></summary>
+      <div class="f-group"><span class="f-label">Method</span>
     <div class="chips" role="group" aria-label="Filter by method">
       <button type="button" class="chip" data-filter="method" data-value="get" aria-pressed="false">GET</button>
       <button type="button" class="chip" data-filter="method" data-value="post" aria-pressed="false">POST</button>
@@ -49,6 +52,8 @@
       <button type="button" class="chip" data-filter="method" data-value="delete" aria-pressed="false">DELETE</button>
       <button type="button" class="chip" data-filter="method" data-value="sql" aria-pressed="false">SQL</button>
     </div>
+      </div>
+      <div class="f-group"><span class="f-label">Role</span>
     <div class="chips" role="group" aria-label="Filter by role">
       <button type="button" class="chip" data-filter="role" data-value="admin" aria-pressed="false">admin</button>
       <button type="button" class="chip" data-filter="role" data-value="viewer" aria-pressed="false">viewer</button>
@@ -57,6 +62,8 @@
       <button type="button" class="chip" data-filter="role" data-value="external" aria-pressed="false">external</button>
       <button type="button" class="chip" data-filter="role" data-value="anonymous" aria-pressed="false">anonymous</button>
     </div>
+      </div>
+    </details>
     <p class="filter-status"><span id="count" aria-live="polite">%%N_TESTS%% tests</span><button type="button" class="linkbtn" id="clear-filters" hidden>Clear filters</button></p>
     <p class="done-status"><span id="done-count">0 of %%N_TESTS%% done</span><button type="button" class="linkbtn" id="done-reset" hidden>Reset</button></p>
     <a class="resume" id="resume" href="#" hidden></a>

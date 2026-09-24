@@ -1094,3 +1094,41 @@ figure.code figcaption { background: #080808; border-bottom-color: var(--card-li
 .nav-item .nid { width: 1.7rem; }
 .nav-item .method { min-width: 2.3rem; padding: 0.02rem 0.28rem !important; font-size: 0.58rem !important; }
 .nav-item .tick { width: 0.8rem; height: 0.8rem; }
+
+/* =====================================================================
+   v8: smooth corners again, and a quieter filter control
+   ===================================================================== */
+/* corners: 14 / 10 / 7, pills stay pills */
+.run, .test, .swagger-panel, .overlay-card, .empty { border-radius: 14px; }
+figure.code, pre.io { border-radius: 12px; }
+.outcome { border-radius: 10px; }
+.search-box input, .icon-btn, .rail-copy, .io-copy, .to-top { border-radius: 10px; }
+.to-top { border-radius: 50%; }
+.nav-item, .nav-link, .nav-group > summary, .resume { border-radius: 8px; }
+.part-letter { border-radius: 12px; }
+code, kbd, .kbd-hint { border-radius: 7px; }
+.chip, .method, .done-check, .sp-open, .top-link.swg, .btn, .byline span, .role, .tab-count, .toast { border-radius: 999px; }
+.test-toggle::after { border-radius: 14px 14px 0 0; }
+.nav-item[aria-current], .nav-link[aria-current] { border-radius: 0 8px 8px 0; }
+.tabs [role=tab] { border-radius: 0; }
+
+/* filters: hidden until asked for, then quiet text toggles */
+.filters { margin: 0.7rem 0 0; }
+.filters > summary { list-style: none; display: inline-flex; align-items: center; gap: 0.5rem; cursor: pointer; font-size: 0.78rem; color: var(--ink-3); padding: 0.25rem 0.1rem; border-radius: 8px; transition: color 0.2s ease; user-select: none; }
+.filters > summary::-webkit-details-marker { display: none; }
+.filters > summary:hover { color: var(--ink); }
+.filters > summary .chev { width: 0.42rem; height: 0.42rem; margin: -0.15rem 0 0 0; }
+.filters:has(.chip[aria-pressed="true"]) > summary { color: var(--ink); }
+.f-dot { display: none; width: 0.4rem; height: 0.4rem; border-radius: 50%; background: #ededed; }
+.filters:has(.chip[aria-pressed="true"]) .f-dot { display: inline-block; }
+.f-group { display: grid; grid-template-columns: 3.4rem 1fr; align-items: start; gap: 0.5rem; margin-top: 0.6rem; }
+.f-label { font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-4); padding-top: 0.32rem; }
+.chips { display: flex; flex-wrap: wrap; gap: 0.15rem 0.1rem; margin: 0; }
+.chip { border: 0; background: transparent; color: var(--ink-3); font-family: var(--sans); font-size: 0.75rem; padding: 0.22rem 0.55rem; line-height: 1.4; transition: color 0.2s ease, background 0.2s ease; }
+.chip:hover { color: var(--ink); background: rgba(255, 255, 255, 0.05); }
+.chip[aria-pressed="true"] { background: rgba(255, 255, 255, 0.1); color: #ededed; }
+.chip[data-filter="method"][data-value="get"][aria-pressed="true"] { color: var(--m-get); background: rgba(138, 180, 255, 0.12); }
+.chip[data-filter="method"][data-value="post"][aria-pressed="true"] { color: var(--m-post); background: rgba(110, 231, 168, 0.12); }
+.chip[data-filter="method"][data-value="patch"][aria-pressed="true"] { color: var(--m-patch); background: rgba(232, 194, 106, 0.12); }
+.chip[data-filter="method"][data-value="delete"][aria-pressed="true"] { color: var(--m-delete); background: rgba(248, 113, 113, 0.12); }
+.filter-status, .done-status { margin: 0.55rem 0 0; }
