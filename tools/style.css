@@ -1178,3 +1178,8 @@ details[open] > .sec-body, details.impl[open] > .impl-body { animation: soft-in 
   .test-body, .tabpanel, details > .sec-body { animation: none !important; }
   * { transition-duration: 0.01ms !important; }
 }
+
+/* top bar and its progress line always sit above page content */
+.shell { position: relative; z-index: auto; }
+.topbar { position: sticky; top: 0; z-index: 50; }
+.progress { z-index: 1; }
