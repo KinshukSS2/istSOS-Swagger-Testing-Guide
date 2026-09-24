@@ -1000,3 +1000,68 @@ mark { background: rgba(232, 194, 106, 0.3); }
 .nav-item.is-done .tick::after { content: ""; position: absolute; left: 0.27rem; top: 0.12rem; width: 0.22rem; height: 0.42rem; border: solid #000; border-width: 0 1.5px 1.5px 0; transform: rotate(45deg); }
 .glance-table tr.is-done .g-title { text-decoration: line-through; text-decoration-color: rgba(255, 255, 255, 0.5); color: var(--ink-3); }
 .done-status { display: flex; justify-content: space-between; align-items: baseline; margin: 0.35rem 0 0; font-size: 0.75rem; color: var(--ink-3); }
+
+/* =====================================================================
+   v6: finer structure. Fainter borders, 13px mono, tighter corners.
+   ===================================================================== */
+:root {
+  --ink: #ededed;
+  --ink-2: #a1a1aa;
+  --ink-3: #8b8b94;
+  --ink-4: #52525b;
+  --rule: rgba(255, 255, 255, 0.05);
+  --rule-2: rgba(255, 255, 255, 0.08);
+  --card-line: rgba(255, 255, 255, 0.06);
+  --mono-size: 13px;
+}
+body { line-height: 1.6; }
+.tabpanel p, .test .sum, .steps p, .run .lead, .sec-body p { line-height: 1.6; }
+
+/* corners: 6px containers, 4px small parts */
+.run, .test, .swagger-panel, figure.code, pre.io, .outcome, .overlay-card, .empty { border-radius: 6px; }
+.run { border-radius: 6px; }
+.search-box input, .icon-btn, .rail-copy, .io-copy, .to-top, code, kbd, .part-letter, .nav-item, .nav-link, .nav-group > summary, .kbd-hint { border-radius: 4px; }
+.chip, .method, .done-check, .sp-open, .top-link.swg, .btn, .byline span, .role, .tab-count, .toast { border-radius: 4px; }
+
+/* surfaces */
+figure.code, pre.io { background: #050505; border-color: var(--card-line); }
+figure.code figcaption { background: #080808; border-bottom-color: var(--card-line); }
+.test, .run, .swagger-panel { border-color: var(--card-line); }
+.test:hover { border-color: rgba(255, 255, 255, 0.1); border-left-color: rgba(255, 255, 255, 0.1); }
+
+/* one monospace size for endpoints, tables and code */
+.code-body, pre.io, .test-meta .ep, .test-meta .tid, .g-ep, .glance-table td, table.files td, table.index td, .plain-table code, .endpoint code, .cap-title .sym { font-size: var(--mono-size); }
+.glance-table td { font-family: var(--mono); }
+.glance-table .g-title { font-family: var(--sans); font-size: 0.875rem; }
+.cap-title .path { font-size: 12px; }
+
+/* tables */
+.glance-table th, .plain-table th, table.files th, table.index th {
+  font-family: var(--sans); font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--ink-3); border-bottom: 1px solid var(--rule-2);
+}
+.glance-table td, .plain-table td, table.files td, table.index td { border-bottom: 1px solid rgba(255, 255, 255, 0.04); border-left: 0; border-right: 0; }
+
+/* sidebar: more air, a 1px off-white rule for the active item */
+.nav-group ul { display: grid; gap: 4px; }
+.nav-item, .nav-link { padding: 0.4rem 0.6rem; border-left: 1px solid transparent; transition: color 0.2s ease, background 0.2s ease; }
+.nav-item[aria-current], .nav-link[aria-current] { background: rgba(255, 255, 255, 0.03); border-left: 1px solid #ededed; color: #ededed; font-weight: 500; }
+.nav-item[aria-current] .nid { color: #ededed; }
+.nav-group { margin: 4px 0; }
+
+/* tabs: no background, 1px underline for the active one */
+.tabs { background: none; }
+.tabs [role=tab] { border-bottom: 1px solid transparent; color: var(--ink-3); transition: color 0.2s ease, border-color 0.2s ease; }
+.tabs [role=tab]:hover { color: var(--ink); }
+.tabs [role=tab][aria-selected=true] { color: #ededed; border-bottom: 1px solid #ededed; font-weight: 500; }
+
+/* status: mint, with quieter text beside it */
+.done-check { color: var(--ink-3); }
+.done-check:has(input:checked) { color: rgba(74, 222, 128, 0.8); border-color: rgba(74, 222, 128, 0.22); background: rgba(74, 222, 128, 0.04); }
+.dot.passed, .glance-table .dot.passed { background: #4ade80; box-shadow: none; }
+.outcome .actual dt { color: rgba(74, 222, 128, 0.85); }
+.outcome > div.actual { background: rgba(74, 222, 128, 0.025); }
+
+/* decorative-only greys may go darker */
+.ln::before { color: var(--ink-4); }
+.g-ep, .test-meta .ep, .endpoint code { border: 0; background: none; padding: 0; color: var(--ink-3); }
