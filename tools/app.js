@@ -684,3 +684,53 @@
   onScroll();
   if (location.hash) openFromHash();
 })();
+
+/* Done checkboxes: the reader ticks a test off, and it is struck through in the sidebar. */
+(function () {
+  "use strict";
+  var KEY = "istsos-guide-done";
+  function load() {
+    try { return JSON.parse(window.localStorage.getItem(KEY) || "[]"); } catch (e) { return []; }
+  }
+  function save(list) {
+    try { window.localStorage.setItem(KEY, JSON.stringify(list)); } catch (e) { /* private mode */ }
+  }
+  var done = load();
+  var boxes = Array.prototype.slice.call(document.querySelectorAll("input[data-done]"));
+  var total = boxes.length;
+  var countEl = document.getElementById("done-count");
+  var resetBtn = document.getElementById("done-reset");
+
+  function apply(id, on) {
+    var card = document.getElementById(id);
+    if (card) card.classList.toggle("is-done", on);
+    document.querySelectorAll('.nav-item[data-id="' + id + '"], .glance-table tr[data-id="' + id + '"]').forEach(function (el) {
+      el.classList.toggle("is-done", on);
+    });
+  }
+  function refresh() {
+    if (countEl) countEl.textContent = done.length + " of " + total + " done";
+    if (resetBtn) resetBtn.hidden = done.length === 0;
+  }
+  boxes.forEach(function (box) {
+    var id = box.dataset.done;
+    box.checked = done.indexOf(id) !== -1;
+    apply(id, box.checked);
+    box.addEventListener("click", function (e) { e.stopPropagation(); });
+    box.addEventListener("change", function () {
+      var i = done.indexOf(id);
+      if (box.checked && i === -1) done.push(id);
+      if (!box.checked && i !== -1) done.splice(i, 1);
+      save(done);
+      apply(id, box.checked);
+      refresh();
+    });
+  });
+  if (resetBtn) resetBtn.addEventListener("click", function () {
+    done = [];
+    save(done);
+    boxes.forEach(function (b) { b.checked = false; apply(b.dataset.done, false); });
+    refresh();
+  });
+  refresh();
+})();

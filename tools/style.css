@@ -979,3 +979,24 @@ mark { background: rgba(232, 194, 106, 0.3); }
   .part-head h3 { font-size: 1.45rem; }
   h1 { font-size: 2.5rem; }
 }
+
+/* done checkbox (replaces the Passed pill) */
+.done-check { margin-left: auto; position: relative; z-index: 2; display: inline-flex; align-items: center; gap: 0.5rem; cursor: pointer; font-family: var(--sans); font-size: 0.78rem; color: var(--ink-3); user-select: none; padding: 0.2rem 0.65rem 0.2rem 0.4rem; border: 1px solid var(--card-line); border-radius: 999px; transition: border-color 0.15s, color 0.15s, background 0.15s; }
+.done-check:hover { border-color: rgba(255, 255, 255, 0.25); color: var(--ink); }
+.done-check input { appearance: none; -webkit-appearance: none; margin: 0; width: 1rem; height: 1rem; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50%; display: grid; place-items: center; cursor: pointer; transition: background 0.15s, border-color 0.15s; }
+.done-check input::after { content: ""; width: 0.28rem; height: 0.5rem; border: solid #000; border-width: 0 1.6px 1.6px 0; transform: rotate(45deg) translate(-0.02rem, -0.05rem); opacity: 0; }
+.done-check input:checked { background: var(--pass); border-color: var(--pass); }
+.done-check input:checked::after { opacity: 1; }
+.done-check input:focus-visible { outline: 2px solid #ededed; outline-offset: 2px; }
+.done-check:has(input:checked) { color: var(--pass); border-color: rgba(74, 222, 128, 0.35); background: rgba(74, 222, 128, 0.06); }
+.test.is-done .test-toggle .tt { color: var(--ink-3); }
+.test.is-done::before { background: var(--pass); }
+
+/* sidebar: struck through when done */
+.nav-item .tick { flex: none; width: 0.9rem; height: 0.9rem; border-radius: 50%; border: 1px solid transparent; }
+.nav-item.is-done .nt { text-decoration: line-through; text-decoration-thickness: 1.5px; text-decoration-color: rgba(255, 255, 255, 0.55); color: var(--ink-4); }
+.nav-item.is-done .nid, .nav-item.is-done .method { opacity: 0.45; }
+.nav-item.is-done .tick { background: var(--pass); border-color: var(--pass); position: relative; }
+.nav-item.is-done .tick::after { content: ""; position: absolute; left: 0.27rem; top: 0.12rem; width: 0.22rem; height: 0.42rem; border: solid #000; border-width: 0 1.5px 1.5px 0; transform: rotate(45deg); }
+.glance-table tr.is-done .g-title { text-decoration: line-through; text-decoration-color: rgba(255, 255, 255, 0.5); color: var(--ink-3); }
+.done-status { display: flex; justify-content: space-between; align-items: baseline; margin: 0.35rem 0 0; font-size: 0.75rem; color: var(--ink-3); }

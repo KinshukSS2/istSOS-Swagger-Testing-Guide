@@ -251,7 +251,7 @@ def render_test(t, prev, nxt):
         f'<header class="test-head">'
         f'<div class="test-meta"><span class="tid">{esc(t["tid"])}</span>{t["badges"]}'
         f'<code class="ep">{esc(t["path"])}</code>'
-        f'<span class="pill {t["status"]}">{t["status"].capitalize()}</span>'
+        f'<label class="done-check" title="Mark {esc(t["tid"])} as done"><input type="checkbox" data-done="{cid}"><span>Done</span></label>'
         f'<a class="anchor" href="#{cid}" aria-label="Link to {esc(t["tid"])}" title="Copy link to {esc(t["tid"])}">#</a></div>'
         f'<h4 id="{cid}-title"><button type="button" class="test-toggle" aria-expanded="false" aria-controls="{cid}-body">'
         f'<span class="tt" data-text="{esc(t["title"])}">{esc(t["title"])}</span></button>'
@@ -292,7 +292,7 @@ for pid, p in parts.items():
         f'<li><a class="nav-item" href="#{t["id"]}" data-id="{t["id"]}" title="{esc(t["tid"])} · {esc(t["title"])}">'
         f'<span class="nid">{esc(t["tid"])}</span>{badge(t["methods"][0])}'
         f'<span class="nt" data-text="{esc(t["title"])}">{esc(t["title"])}</span>'
-        f'<span class="dot {t["status"]}" title="{t["status"].capitalize()}"></span></a></li>'
+        f'<span class="tick" aria-hidden="true"></span></a></li>'
         for t in p["tests"]
     )
     nav_tests += (
