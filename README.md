@@ -132,5 +132,5 @@ istSOS4 API.
 ---
 
 <p align="center">
-  <sub>Kinshuk &middot; <a href="https://github.com/KinshukSS2">@KinshukSS2</a></sub>
+  <sub>Kinshuk Sanand &middot; <a href="https://github.com/KinshukSS2">@KinshukSS2</a></sub>
 </p>
