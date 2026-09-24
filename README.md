@@ -1,103 +1,108 @@
-<div align="center">
+<p align="center">
+  <img src="assets/banner.svg" alt="istSOS4 Authentication and Authorization Testing Guide" width="100%">
+</p>
 
-# 🧪 istSOS4 Auth Testing Guide
-
-### Every authentication, RBAC and row-level-security feature —<br/>tested against a live deployment and traced to the code that implements it.
-
-<br/>
-
-[![Live Guide](https://img.shields.io/badge/🚀_LIVE_GUIDE-Open_Now-8aa9ff?style=for-the-badge&labelColor=0a0c10)](https://kinshukss2.github.io/istSOS-Swagger-Testing-Guide/)
-
-<br/>
-
-![Tests](https://img.shields.io/badge/tests-32%2F32_passing-3ecf8e?style=flat-square&labelColor=11151c)
-![Pass rate](https://img.shields.io/badge/pass_rate-100%25-3ecf8e?style=flat-square&labelColor=11151c)
-![Source files traced](https://img.shields.io/badge/source_files_traced-50-8aa9ff?style=flat-square&labelColor=11151c)
-![Standard](https://img.shields.io/badge/OGC-SensorThings_API-f0b449?style=flat-square&labelColor=11151c)
-![GSoC](https://img.shields.io/badge/GSoC-2026-ff7a7a?style=flat-square&labelColor=11151c)
-![Hosted on](https://img.shields.io/badge/hosted_on-GitHub_Pages-181717?style=flat-square&logo=github&labelColor=11151c)
-
-</div>
+<p align="center">
+  <a href="https://kinshukss2.github.io/istSOS-Swagger-Testing-Guide/"><b>Open the guide</b></a>
+  &nbsp;&middot;&nbsp;
+  <a href="https://github.com/istSOS/istSOS4">istSOS4</a>
+  &nbsp;&middot;&nbsp;
+  <a href="https://www.ogc.org/standards/sensorthings/">OGC SensorThings API</a>
+</p>
 
 ---
 
-## ✨ What is this?
-
-An interactive, single-page test report for the **authentication & authorization layer of [istSOS4](https://github.com/istSOS/istSOS4)**, the OGC SensorThings API server.
-
-Each test in the guide shows:
+## Sheet metadata
 
 | | |
 |---|---|
-| 🎯 **What it checks** | The behaviour under test, in plain language |
-| 📋 **Expected vs. actual** | What should happen, and what really happened |
-| 🧵 **The implementation** | The exact source locations that make it work, with line numbers |
-| 🔬 **The test logic** | The code that performs the assertion |
-| 📡 **Recorded HTTP exchanges** | Real requests and responses from the live run |
-| ▶️ **Run in Swagger** | A jump-off point to reproduce the test yourself |
+| **Title** | istSOS4 Authentication and Authorization Testing Guide |
+| **Subject** | Access control in an OGC SensorThings API server |
+| **Method** | Live deployment, recorded HTTP exchanges, source tracing |
+| **Result** | 32 of 32 tests passed, 0 failed, 0 manual |
+| **Coverage** | 50 source files traced to the behaviour they implement |
+| **Configuration** | `AUTHORIZATION=1` `NETWORK=1` `ANONYMOUS_VIEWER=0` `VERSIONING=1` `REDIS=0` |
+| **Programme** | Google Summer of Code 2026 |
+| **Published at** | https://kinshukss2.github.io/istSOS-Swagger-Testing-Guide/ |
 
-## 🗺️ What's covered
+## Purpose
 
-| Part | Focus | Tests |
-|:---:|---|:---:|
-| **Setup** | Ground truth: Networks, Datastreams, Observations, feature flags | `S0` |
-| **A** | 🔐 **Local account lifecycle**: register → approve → login → RBAC boundary → refresh → role change → password change → logout → reject / deactivate | `A1 – A12` |
-| **B** | 🌐 **External (OIDC) authentication**: start login, provider consent, identity activation, provider availability | `B1 – B4` |
-| **C** | 👁️ **Data visibility & Network scoping**: access matrix, anonymous denial, viewer/editor isolation, reference tables, observation counts, admin-only policies | `C1 – C10` |
-| **D** | 🛠️ **The custom role**: mixed read/write grants, proving the split, revoking, external custom identities | `D1 – D5` |
+istSOS4 stores sensor observations and serves them through the OGC SensorThings
+API. Once authentication is switched on, every request is decided by who is
+asking and which Network the data belongs to. A wrong decision here either leaks
+observations or locks out a legitimate user.
 
-> **32 tests · 32 passed · 0 failed · 0 manual**, run against a live deployment with
-> `AUTHORIZATION=1` `NETWORK=1` `ANONYMOUS_VIEWER=0` `VERSIONING=1` `REDIS=0`.
+This guide exercises that decision layer end to end against a running instance.
+For every test it records what was expected, what actually came back, and which
+lines of source produced the result, so a claim about access control can be
+checked against both the traffic and the code.
 
-## 🎛️ Features of the page
+## Legend
 
-- 🔍 **Live filter**: search across all tests instantly
-- 📂 **Expand / collapse all**: skim the summary or dive into every detail
-- 🔢 **Line numbers toggle**: for code excerpts
-- 🌙 **Dark, readable design**: IBM Plex Sans + JetBrains Mono
-- 📱 **Responsive**: works on desktop, tablet and phone
-- ⚡ **Zero build step**: one self-contained `index.html`
+Each entry in the guide opens to the same five layers.
 
-## 🚀 Run it locally
+| Layer | Content |
+|---|---|
+| Overview | What the test checks, in plain language |
+| Implementation | The source locations behind the behaviour, with line numbers |
+| Test logic | The code that performs the assertion |
+| Result | Expected against actual, and the verdict |
+| Exchanges | The real requests and responses, replayable in Swagger |
 
-No install, no build.
+## Map index
+
+The tests are grouped into five sections, roughly in the order a user meets the
+system.
+
+| Section | Area | Tests |
+|---|---|---|
+| **S** | Ground truth: Networks, Datastreams, Observations, feature flags | S0 |
+| **A** | Local account lifecycle: register, approve, log in, RBAC boundary, refresh, role change, password change, log out, reject, deactivate | A1 to A12 |
+| **B** | External OIDC authentication: start login, provider consent, identity activation, provider availability | B1 to B4 |
+| **C** | Data visibility and Network scoping: access matrix, anonymous denial, viewer and editor isolation, reference tables, observation counts, administrator-only policies | C1 to C10 |
+| **D** | The custom role: mixed read and write grants, proving the split, revoking, external custom identities | D1 to D5 |
+
+## Reading the page
+
+- The filter box narrows the list as you type.
+- Expand all and Collapse all switch between the summary and full detail.
+- Line numbers can be toggled on the code excerpts.
+- The page is one self-contained `index.html` with no build step and works down
+  to phone width.
+
+## Running it locally
 
 ```bash
 git clone https://github.com/KinshukSS2/istSOS-Swagger-Testing-Guide.git
 cd istSOS-Swagger-Testing-Guide
-
-# option 1: just open it
-xdg-open index.html
-
-# option 2: serve it
-python3 -m http.server 8000   # → http://localhost:8000
+python3 -m http.server 8000
 ```
 
-## 📁 Repository layout
+Then open `http://localhost:8000`. Opening `index.html` directly also works.
+
+## Repository
 
 ```
 .
-├── index.html    # the complete guide (self-contained)
-├── .nojekyll     # serve files as-is on GitHub Pages
+├── index.html          the complete guide
+├── assets/
+│   └── banner.svg      header sheet for this README
+├── .nojekyll           serve files unmodified on GitHub Pages
 └── README.md
 ```
 
-## 🌍 Deployment
+The site is served by GitHub Pages from the `main` branch and is rebuilt on
+every push.
 
-Hosted with **GitHub Pages**, served straight from the `main` branch.
-Every push to `main` republishes the site automatically.
+## Context
 
-**🔗 https://kinshukss2.github.io/istSOS-Swagger-Testing-Guide/**
-
-## 🔗 Related
-
-- 🛰️ [istSOS4](https://github.com/istSOS/istSOS4): the SensorThings API server under test
-- 📖 [OGC SensorThings API](https://www.ogc.org/standards/sensorthings/): the standard
+istSOS is an open-source implementation of the OGC SensorThings API, developed
+in the geospatial community around SUPSI and OSGeo. This guide was prepared as
+part of a Google Summer of Code project on documenting and verifying the
+istSOS4 API.
 
 ---
 
-<div align="center">
-
-Made with ☕ for **Google Summer of Code** · by [@KinshukSS2](https://github.com/KinshukSS2)
-
-</div>
+<p align="center">
+  <sub>Kinshuk &middot; <a href="https://github.com/KinshukSS2">@KinshukSS2</a></sub>
+</p>
