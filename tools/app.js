@@ -192,6 +192,9 @@
     } else {
       if (el.hidden) clearFilters();
       reveal(el);
+      var target = el;
+      while (target && !navLinks[target.id]) target = target.parentElement && target.parentElement.closest("[id]");
+      if (target) setCurrent(target.id);
     }
     closeDrawer();
     pin();
@@ -222,6 +225,7 @@
   var q = $("#q");
   var countEl = $("#count");
   var clearBtn = $("#clear-filters");
+  var fCount = $("#f-count");
   var total = tests.length;
   var active = { method: [], role: [] };
   var navItems = {};
@@ -271,10 +275,13 @@
       var visible = $$("li:not([hidden])", g).length;
       g.hidden = !visible;
       $(".ng-count", g).textContent = filtering ? visible + "/" + $$("li", g).length : $$("li", g).length;
-      if (filtering && visible) g.open = true;
+      if (filtering && visible) autoOpen(g);
     });
     countEl.textContent = filtering ? shown + " of " + total + " tests" : total + " tests";
     clearBtn.hidden = !filtering;
+    var nChips = active.method.length + active.role.length;
+    fCount.hidden = !nChips;
+    fCount.textContent = nChips;
     $("#empty").hidden = shown !== 0;
     updateMobileSteps();
   }
@@ -309,16 +316,38 @@
   $$("[data-clear]").forEach(function (b) { b.addEventListener("click", clearFilters); });
 
   /* ------------------------------------------------------------ nav groups */
+  /* Groups the reader opens stay open (and are remembered); groups the page
+     opens while following the reading position close again once it moves on. */
   var groupsKey = "istsos-guide-groups";
   var savedGroups = store(groupsKey);
-  if (savedGroups) {
+  if (savedGroups !== null) {
     var openSet = savedGroups.split(",");
     $$(".nav-group").forEach(function (g) { g.open = openSet.indexOf(g.dataset.group) !== -1; });
   }
   function saveGroups() {
-    store(groupsKey, $$(".nav-group[open]").map(function (g) { return g.dataset.group; }).join(","));
+    store(groupsKey, $$(".nav-group[open]:not([data-auto])").map(function (g) { return g.dataset.group; }).join(","));
   }
-  $$(".nav-group").forEach(function (g) { g.addEventListener("toggle", saveGroups); });
+  function autoOpen(g) {
+    if (g.open) return;
+    g.dataset.auto = "1";
+    g.open = true;
+  }
+  function autoCloseExcept(keep) {
+    if (!clearBtn.hidden) return; /* keep matches visible while a filter is on */
+    $$(".nav-group[data-auto]").forEach(function (g) {
+      if (g === keep) return;
+      g.open = false;
+      delete g.dataset.auto;
+    });
+  }
+  $$(".nav-group > summary").forEach(function (sm) {
+    sm.addEventListener("click", function (e) {
+      if (e.target.closest("a")) return;
+      var g = sm.parentNode;
+      delete g.dataset.auto;
+      setTimeout(saveGroups, 0);
+    });
+  });
 
   /* ------------------------------------------------------------ scroll spy */
   /* One IntersectionObserver watches every landmark the sidebar links to. */
@@ -339,8 +368,16 @@
       html = '<a href="#test-features">Tests</a><span class="sep">›</span><span class="cur">' +
         escapeHtml(el.dataset.label + " · " + $("h3", el).textContent) + "</span>";
     } else if (el && el.closest("#reference")) {
-      var title = el.matches("details.sec") ? $(".sec-title", el) : null;
-      html = '<a href="#reference">Reference</a>' + (title ? '<span class="sep">›</span><span class="cur">' + escapeHtml(title.textContent) + "</span>" : "");
+      var sec = el.closest("details.sec");
+      html = '<a href="#reference">Reference</a>';
+      if (sec) {
+        var t = $(".sec-title", sec).textContent;
+        html += '<span class="sep">›</span>' + (sec === el
+          ? '<span class="cur">' + escapeHtml(t) + "</span>"
+          : '<a href="#' + sec.id + '">' + escapeHtml(t) + '</a><span class="sep">›</span><span class="cur">' + escapeHtml(el.textContent) + "</span>");
+      }
+    } else if (el && el.closest("#run-swagger") && el.id !== "run-swagger") {
+      html = '<a href="#run-swagger">Run Swagger</a><span class="sep">›</span><span class="cur">' + escapeHtml(el.textContent) + "</span>";
     } else if (el) {
       var h = $("h2", el);
       html = '<span class="cur">' + escapeHtml(h ? h.textContent : "") + "</span>";
@@ -359,7 +396,8 @@
     if (link) {
       link.setAttribute("aria-current", "location");
       var g = link.closest(".nav-group");
-      if (g && !g.open) g.open = true;
+      if (g) autoOpen(g);
+      autoCloseExcept(g);
       var nav = $("#side-nav");
       var lr = link.getBoundingClientRect();
       var nr = nav.getBoundingClientRect();
@@ -382,20 +420,40 @@
   function pin() {
     pinned = true;
     clearTimeout(pin.t);
-    pin.t = setTimeout(function () { pinned = false; }, 1200);
+    /* Released when the jump's scroll settles; the timer covers browsers without scrollend. */
+    pin.t = setTimeout(function () { pinned = false; }, "onscrollend" in window ? 4000 : 1500);
   }
+  window.addEventListener("scrollend", function () {
+    if (!pinned) return;
+    clearTimeout(pin.t);
+    pin.t = setTimeout(function () { pinned = false; }, 150);
+  });
   ["wheel", "touchmove"].forEach(function (ev) {
     window.addEventListener(ev, function () { pinned = false; }, { passive: true });
   });
+  /* Hidden by a filter, or folded inside a closed section (which Chrome still lays out). */
+  function shown(el) {
+    if (el.hidden || el.offsetParent === null) return false;
+    var p = el.parentElement && el.parentElement.closest("details:not([open])");
+    return !p;
+  }
   function spy() {
     if (pinned) return;
     /* The active item is the last landmark whose top has passed the reading line. */
     var line = window.innerHeight * 0.25 + 1;
     var best = null;
     spyTargets.forEach(function (el) {
-      if (el.hidden || el.offsetParent === null) return;
+      if (!shown(el)) return;
       if (el.getBoundingClientRect().top <= line) best = el;
     });
+    /* At the very bottom nothing more can reach the line: take the last landmark on screen. */
+    var doc = document.documentElement;
+    if (window.scrollY + window.innerHeight >= doc.scrollHeight - 4) {
+      spyTargets.forEach(function (el) {
+        if (!shown(el)) return;
+        if (el.getBoundingClientRect().top < window.innerHeight) best = el;
+      });
+    }
     if (!best) best = spyTargets[0];
     /* Tests follow their part in document order, so a test beats the part that contains it. */
     setCurrent(best ? best.id : null);
@@ -549,6 +607,7 @@
     var p = max > 0 ? Math.min(1, window.scrollY / max) : 0;
     bar.style.transform = "scaleX(" + p + ")";
     toTop.hidden = window.scrollY < window.innerHeight * 1.2;
+    if (max - window.scrollY < 4) spy();
   }
   window.addEventListener("scroll", function () {
     if (!ticking) { ticking = true; requestAnimationFrame(onScroll); }

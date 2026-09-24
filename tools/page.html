@@ -41,6 +41,9 @@
       <input id="q" type="search" placeholder="Search tests, endpoints…" autocomplete="off" spellcheck="false">
       <kbd class="kbd-hint" aria-hidden="true">/</kbd>
     </div>
+    <details class="filters" id="filters">
+    <summary><span>Filters</span><span class="f-count" id="f-count" hidden></span></summary>
+    <p class="f-k">Method</p>
     <div class="chips" role="group" aria-label="Filter by method">
       <button type="button" class="chip" data-filter="method" data-value="get" aria-pressed="false">GET</button>
       <button type="button" class="chip" data-filter="method" data-value="post" aria-pressed="false">POST</button>
@@ -48,6 +51,7 @@
       <button type="button" class="chip" data-filter="method" data-value="delete" aria-pressed="false">DELETE</button>
       <button type="button" class="chip" data-filter="method" data-value="sql" aria-pressed="false">SQL</button>
     </div>
+    <p class="f-k">Role</p>
     <div class="chips" role="group" aria-label="Filter by role">
       <button type="button" class="chip" data-filter="role" data-value="admin" aria-pressed="false">admin</button>
       <button type="button" class="chip" data-filter="role" data-value="viewer" aria-pressed="false">viewer</button>
@@ -56,31 +60,25 @@
       <button type="button" class="chip" data-filter="role" data-value="external" aria-pressed="false">external</button>
       <button type="button" class="chip" data-filter="role" data-value="anonymous" aria-pressed="false">anonymous</button>
     </div>
+    </details>
     <p class="filter-status"><span id="count" aria-live="polite">%%N_TESTS%% tests</span><button type="button" class="linkbtn" id="clear-filters" hidden>Clear filters</button></p>
     <a class="resume" id="resume" href="#" hidden></a>
   </div>
 
   <nav class="side-nav" id="side-nav" aria-label="Sections and tests">
-    <details class="nav-group" data-group="start" open>
-      <summary><span class="ng-k">Start here</span><span class="ng-count"></span></summary>
-      <ul>
-        <li><a class="nav-link" href="#run-swagger" data-id="run-swagger">Run Swagger</a></li>
-        <li><a class="nav-link" href="#glance" data-id="glance">All tests at a glance</a></li>
-      </ul>
-    </details>
+    <p class="nav-label">Get started</p>
+    <details class="nav-group" data-group="run"><summary><a class="ng-link" href="#run-swagger" data-id="run-swagger"><span class="ng-k">Run Swagger</span></a></summary><ul><li><a class="nav-link" href="#run-start-the-application" data-id="run-start-the-application">Start the application</a></li><li><a class="nav-link" href="#run-open-swagger" data-id="run-open-swagger">Open Swagger</a></li><li><a class="nav-link" href="#run-authenticate" data-id="run-authenticate">Authenticate</a></li><li><a class="nav-link" href="#run-execute-a-request" data-id="run-execute-a-request">Execute a request</a></li><li><a class="nav-link" href="#run-what-you-should-see" data-id="run-what-you-should-see">What you should see</a></li></ul></details>
+    <a class="nav-top" href="#glance" data-id="glance">All tests at a glance</a>
+    <p class="nav-label"><a href="#test-features" data-id="test-features">Tests</a></p>
     %%NAV_TESTS%%
-    <details class="nav-group" data-group="reference">
-      <summary><a class="ng-link" href="#reference" data-id="reference"><span class="ng-k">Reference</span></a><span class="ng-count"></span></summary>
-      <ul>
-        <li><a class="nav-link" href="#overview" data-id="overview">Overview</a></li>
-        <li><a class="nav-link" href="#prerequisites" data-id="prerequisites">Prerequisites</a></li>
-        <li><a class="nav-link" href="#setup" data-id="setup">Setup</a></li>
-        <li><a class="nav-link" href="#authentication" data-id="authentication">Authentication</a></li>
-        <li><a class="nav-link" href="#implementation" data-id="implementation">Implementation details</a></li>
-        <li><a class="nav-link" href="#troubleshooting" data-id="troubleshooting">Troubleshooting</a></li>
-        <li><a class="nav-link" href="#notes" data-id="notes">Additional notes</a></li>
-      </ul>
-    </details>
+    <p class="nav-label"><a href="#reference" data-id="reference">Reference</a></p>
+    <details class="nav-group" data-group="overview"><summary><a class="ng-link" href="#overview" data-id="overview"><span class="ng-k">Overview</span></a></summary><ul><li><a class="nav-link" href="#overv-what-the-tests-cover" data-id="overv-what-the-tests-cover">What the tests cover</a></li><li><a class="nav-link" href="#overv-the-recorded-run" data-id="overv-the-recorded-run">The recorded run</a></li></ul></details>
+    <a class="nav-top" href="#prerequisites" data-id="prerequisites">Prerequisites</a>
+    <details class="nav-group" data-group="setup"><summary><a class="ng-link" href="#setup" data-id="setup"><span class="ng-k">Setup</span></a></summary><ul><li><a class="nav-link" href="#setup-make-logout-actually-revoke" data-id="setup-make-logout-actually-revoke">Make logout actually revoke</a></li><li><a class="nav-link" href="#setup-start-again-from-a-clean-database" data-id="setup-start-again-from-a-clean-database">Start again from a clean database</a></li><li><a class="nav-link" href="#setup-configuration-of-the-recorded-run" data-id="setup-configuration-of-the-recorded-run">Configuration of the recorded run</a></li></ul></details>
+    <details class="nav-group" data-group="authentication"><summary><a class="ng-link" href="#authentication" data-id="authentication"><span class="ng-k">Authentication</span></a></summary><ul><li><a class="nav-link" href="#authe-the-life-of-a-local-account" data-id="authe-the-life-of-a-local-account">The life of a local account</a></li><li><a class="nav-link" href="#authe-roles" data-id="authe-roles">Roles</a></li><li><a class="nav-link" href="#authe-tokens" data-id="authe-tokens">Tokens</a></li><li><a class="nav-link" href="#authe-external-sign-in" data-id="authe-external-sign-in">External sign-in</a></li></ul></details>
+    <details class="nav-group" data-group="implementation"><summary><a class="ng-link" href="#implementation" data-id="implementation"><span class="ng-k">Implementation details</span></a></summary><ul><li><a class="nav-link" href="#imple-source-index" data-id="imple-source-index">Source index</a></li></ul></details>
+    <details class="nav-group" data-group="troubleshooting"><summary><a class="ng-link" href="#troubleshooting" data-id="troubleshooting"><span class="ng-k">Troubleshooting</span></a></summary><ul><li><a class="nav-link" href="#troub-authorize-answers-401" data-id="troub-authorize-answers-401">Authorize answers 401</a></li><li><a class="nav-link" href="#troub-authorize-fails-for-a-confusing-reason" data-id="troub-authorize-fails-for-a-confusing-reason">Authorize fails for a confusing reason</a></li><li><a class="nav-link" href="#troub-requests-turn-into-401-halfway-through" data-id="troub-requests-turn-into-401-halfway-through">Requests turn into 401 halfway through</a></li><li><a class="nav-link" href="#troub-a-patch-post-or-delete-gives-404-or-405-in-a-new" data-id="troub-a-patch-post-or-delete-gives-404-or-405-in-a-new">A PATCH, POST or DELETE gives 404 or 405 in a new tab</a></li><li><a class="nav-link" href="#troub-lists-come-back-empty-or-the-page-will-not-load" data-id="troub-lists-come-back-empty-or-the-page-will-not-load">Lists come back empty, or the page will not load</a></li><li><a class="nav-link" href="#troub-logout-succeeds-but-the-token-still-works" data-id="troub-logout-succeeds-but-the-token-still-works">Logout succeeds but the token still works</a></li><li><a class="nav-link" href="#troub-registration-says-the-username-is-taken" data-id="troub-registration-says-the-username-is-taken">Registration says the username is taken</a></li><li><a class="nav-link" href="#troub-an-external-login-answers-404" data-id="troub-an-external-login-answers-404">An external login answers 404</a></li><li><a class="nav-link" href="#troub-auth-features-seem-to-be-switched-off" data-id="troub-auth-features-seem-to-be-switched-off">Auth features seem to be switched off</a></li></ul></details>
+    <details class="nav-group" data-group="notes"><summary><a class="ng-link" href="#notes" data-id="notes"><span class="ng-k">Additional notes</span></a></summary><ul><li><a class="nav-link" href="#notes-cleaning-up-after-a-run" data-id="notes-cleaning-up-after-a-run">Cleaning up after a run</a></li><li><a class="nav-link" href="#notes-how-this-guide-is-made" data-id="notes-how-this-guide-is-made">How this guide is made</a></li><li><a class="nav-link" href="#notes-links" data-id="notes-links">Links</a></li></ul></details>
   </nav>
 
   <div class="side-foot">
@@ -108,7 +106,7 @@
 
       <ol class="steps">
         <li>
-          <h3>Start the application</h3>
+          <h3 id="run-start-the-application">Start the application</h3>
           <p>You need Git and Docker with the Compose plugin. The example environment file is already set up for testing, so change nothing on a first run.</p>
           <figure class="code" data-kind="snippet">
             <figcaption><span class="cap-title"><span class="sym">Terminal</span><span class="path">sh</span></span><span class="cap-tools"><button type="button" class="copy">Copy</button></span></figcaption>
@@ -118,12 +116,12 @@
         </li>
 
         <li>
-          <h3>Open Swagger</h3>
+          <h3 id="run-open-swagger">Open Swagger</h3>
           <p>Go to <a class="swagger-url" href="%%SWAGGER_HREF%%" target="_blank" rel="noopener">%%SWAGGER_HREF%%</a>. You should see the istSOS4 API page, with endpoint groups such as <em>Registration &amp; Approval</em>, <em>Users</em> and <em>Policies</em>.</p>
         </li>
 
         <li>
-          <h3>Authenticate</h3>
+          <h3 id="run-authenticate">Authenticate</h3>
           <p>Most endpoints need a token. Click the padlock button labelled <em>Authorize</em> at the top right and fill in the OAuth2 password form:</p>
           <ul class="field-list">
             <li><span class="f">username</span><span><code>admin</code></span></li>
@@ -134,12 +132,12 @@
         </li>
 
         <li>
-          <h3>Execute a request</h3>
+          <h3 id="run-execute-a-request">Execute a request</h3>
           <p>Expand an endpoint, click <em>Try it out</em>, fill in the parameters or the body, and click <em>Execute</em>. The status code, body and headers appear directly below. Always send requests this way. The <em>Request URL</em> link and the browser address bar can only send <code>GET</code>, so a <code>PATCH</code> or <code>POST</code> opened there fails with a <code>404</code> or <code>405</code> that looks like a bug and is not one.</p>
         </li>
 
         <li>
-          <h3>What you should see</h3>
+          <h3 id="run-what-you-should-see">What you should see</h3>
           <ul class="expect">
             <li><span class="st st-2">200</span><span><code>POST /Login</code> with the admin credentials returns a bearer <code>access_token</code>.</span></li>
             <li><span class="st st-4">401</span><span>A request to <code>/Datastreams</code> without a token answers <code>{"detail": "Not authenticated"}</code>.</span></li>
@@ -194,7 +192,7 @@
         <p>istSOS4 is an open-source server for the OGC SensorThings API, which stores sensor observations. When authentication is switched on, every request is decided by two things: who is asking, and which Network the data belongs to. A wrong decision either leaks observations or locks out a legitimate user.</p>
         <p>This guide exercises that decision layer end to end. All %%N_TESTS%% tests ran against a live deployment, and each records what it expected, what came back, and which lines of source produced the result. A claim about access control can therefore be checked against both the traffic and the code.</p>
 
-        <h3>What the tests cover</h3>
+        <h3 id="overv-what-the-tests-cover">What the tests cover</h3>
         <ul>
           <li><a href="#part-s">Setup</a>: what the deployment contains before anything is asserted.</li>
           <li><a href="#part-a">Part A</a>: the life of a local account, from registration to deactivation.</li>
@@ -203,7 +201,7 @@
           <li><a href="#part-d">Part D</a>: a custom role whose access is granted row by row.</li>
         </ul>
 
-        <h3>The recorded run</h3>
+        <h3 id="overv-the-recorded-run">The recorded run</h3>
         <div class="table-wrap"><table class="plain-table">
           <tbody>
             <tr><td>Result</td><td>%%N_PASSED%% of %%N_TESTS%% passed, none failed, none manual</td></tr>
@@ -250,21 +248,21 @@
         </table></div>
         <p>Do not set <code>AUTHORIZATION</code> or <code>NETWORK</code> back to <code>0</code>, or none of the features in this guide are active.</p>
 
-        <h3>Make logout actually revoke</h3>
+        <h3 id="setup-make-logout-actually-revoke">Make logout actually revoke</h3>
         <p>Set <code>REDIS=1</code> in <code>.env</code>, then restart only the API. A logged-out token is then rejected with <code>401 "Token has been revoked"</code>. Tokens carry no unique id, so if you log in again within the same second as a logout you receive the same, still-revoked token. Wait a second.</p>
         <figure class="code" data-kind="snippet">
           <figcaption><span class="cap-title"><span class="sym">Terminal</span><span class="path">sh</span></span><span class="cap-tools"><button type="button" class="copy">Copy</button></span></figcaption>
           <div class="code-body nolines" tabindex="0" role="region" aria-label="Restart API"><pre><code><span class="ln" data-n="1">docker compose up -d api</span></code></pre></div>
         </figure>
 
-        <h3>Start again from a clean database</h3>
+        <h3 id="setup-start-again-from-a-clean-database">Start again from a clean database</h3>
         <p>Re-running <code>docker compose up</code> is safe, because the dummy-data generator skips itself when data exists. To wipe everything:</p>
         <figure class="code" data-kind="snippet">
           <figcaption><span class="cap-title"><span class="sym">Terminal</span><span class="path">sh</span></span><span class="cap-tools"><button type="button" class="copy">Copy</button></span></figcaption>
           <div class="code-body nolines" tabindex="0" role="region" aria-label="Reset"><pre><code><span class="ln" data-n="1">docker compose down -v</span><span class="ln" data-n="2">docker compose up -d --build</span></code></pre></div>
         </figure>
 
-        <h3>Configuration of the recorded run</h3>
+        <h3 id="setup-configuration-of-the-recorded-run">Configuration of the recorded run</h3>
         <div class="table-wrap"><table class="plain-table"><tbody>%%FLAGS_ROWS%%</tbody></table></div>
       </div>
     </details>
@@ -272,7 +270,7 @@
     <details class="sec" id="authentication">
       <summary><span><span class="sec-title">Authentication</span><span class="sec-desc">Accounts, roles, tokens and external sign-in</span></span><span class="chev" aria-hidden="true"></span></summary>
       <div class="sec-body">
-        <h3>The life of a local account</h3>
+        <h3 id="authe-the-life-of-a-local-account">The life of a local account</h3>
         <p>Nobody gets access by registering. An application is held as <em>pending</em>, an administrator reviews it, and only approval turns it into a working account with a role.</p>
         <ol>
           <li><code>POST /Register</code> creates a pending account (<a href="#a1">A1</a>).</li>
@@ -282,7 +280,7 @@
           <li>The token can be renewed with <code>POST /Refresh</code> (<a href="#a7">A7</a>) and ended with <code>POST /Logout</code> (<a href="#a10">A10</a>).</li>
         </ol>
 
-        <h3>Roles</h3>
+        <h3 id="authe-roles">Roles</h3>
         <div class="table-wrap"><table class="plain-table">
           <thead><tr><th>Role</th><th>What it can do</th><th>Tests</th></tr></thead>
           <tbody>
@@ -294,10 +292,10 @@
           </tbody>
         </table></div>
 
-        <h3>Tokens</h3>
+        <h3 id="authe-tokens">Tokens</h3>
         <p>Signing in returns a bearer token. Swagger&rsquo;s <em>Authorize</em> button attaches it to every request for you. Tokens expire after five minutes by default (<code>ACCESS_TOKEN_EXPIRE_MINUTES</code>).</p>
 
-        <h3>External sign-in</h3>
+        <h3 id="authe-external-sign-in">External sign-in</h3>
         <p>Google, Microsoft, GitHub, ORCID and SWITCH edu-ID are supported. A provider only registers when both its client id and secret are set, so leaving a pair empty disables just that provider. The redirect URI to register with the provider is:</p>
         <figure class="code" data-kind="snippet">
           <figcaption><span class="cap-title"><span class="sym">Redirect URI</span><span class="path">template</span></span><span class="cap-tools"><button type="button" class="copy">Copy</button></span></figcaption>
@@ -320,7 +318,7 @@
           <dd>Which rows a signed-in user can read or write is decided by PostgreSQL row-level security, not by the API. The recorded run had 42 <code>rbac_*</code> policies with row-level security on 9 tables (<a href="#c1">C1</a>). That is why a viewer&rsquo;s query for another Network&rsquo;s row returns <code>404</code>: the row does not exist for that user at all.</dd>
         </dl>
 
-        <h3>Source index</h3>
+        <h3 id="imple-source-index">Source index</h3>
         <p>Every file the implementation excerpts come from, with the symbols used and the tests that exercise them. File names link to the exact commit.</p>
         <div class="table-wrap"><table class="index">
           <thead><tr><th>File</th><th>Symbols</th><th>Tests</th></tr></thead>
@@ -333,23 +331,23 @@
       <summary><span><span class="sec-title">Troubleshooting</span><span class="sec-desc">The problems people actually hit</span></span><span class="chev" aria-hidden="true"></span></summary>
       <div class="sec-body">
         <dl class="definitions">
-          <dt>Authorize answers 401</dt>
+          <dt id="troub-authorize-answers-401">Authorize answers 401</dt>
           <dd>The username or password is wrong. Copy the password exactly, with no quotes and no trailing space. If you are unsure of it, read it from the container as shown under Prerequisites.</dd>
-          <dt>Authorize fails for a confusing reason</dt>
+          <dt id="troub-authorize-fails-for-a-confusing-reason">Authorize fails for a confusing reason</dt>
           <dd>Something was typed into <code>client_secret</code>. The app does not use <code>client_id</code> or <code>client_secret</code>; leave both empty.</dd>
-          <dt>Requests turn into 401 halfway through</dt>
+          <dt id="troub-requests-turn-into-401-halfway-through">Requests turn into 401 halfway through</dt>
           <dd>The token expired. Click <em>Authorize</em> again.</dd>
-          <dt>A PATCH, POST or DELETE gives 404 or 405 in a new tab</dt>
+          <dt id="troub-a-patch-post-or-delete-gives-404-or-405-in-a-new">A PATCH, POST or DELETE gives 404 or 405 in a new tab</dt>
           <dd>You opened the endpoint&rsquo;s URL in the browser, which sends <code>GET</code>. Send it with <em>Try it out</em> and <em>Execute</em> inside Swagger.</dd>
-          <dt>Lists come back empty, or the page will not load</dt>
+          <dt id="troub-lists-come-back-empty-or-the-page-will-not-load">Lists come back empty, or the page will not load</dt>
           <dd>The stack may still be starting. Follow <code>docker compose logs -f dummy_data</code> until the generator finishes.</dd>
-          <dt>Logout succeeds but the token still works</dt>
+          <dt id="troub-logout-succeeds-but-the-token-still-works">Logout succeeds but the token still works</dt>
           <dd><code>REDIS</code> is 0. See <em>Setup</em> to turn revocation on.</dd>
-          <dt>Registration says the username is taken</dt>
+          <dt id="troub-registration-says-the-username-is-taken">Registration says the username is taken</dt>
           <dd>In the tested build, deactivating a user keeps the row and its username, so a name cannot be reused. Add a suffix such as <code>demo_alice_2</code> for each run.</dd>
-          <dt>An external login answers 404</dt>
+          <dt id="troub-an-external-login-answers-404">An external login answers 404</dt>
           <dd>That provider has no client id and secret configured. Set both in <code>.env</code> and restart the API.</dd>
-          <dt>Auth features seem to be switched off</dt>
+          <dt id="troub-auth-features-seem-to-be-switched-off">Auth features seem to be switched off</dt>
           <dd>Check that <code>AUTHORIZATION</code> and <code>NETWORK</code> are both <code>1</code> in <code>.env</code>, then run <code>docker compose up -d --build</code>.</dd>
         </dl>
       </div>
@@ -358,13 +356,13 @@
     <details class="sec" id="notes">
       <summary><span><span class="sec-title">Additional notes</span><span class="sec-desc">Cleaning up, provenance and links</span></span><span class="chev" aria-hidden="true"></span></summary>
       <div class="sec-body">
-        <h3>Cleaning up after a run</h3>
+        <h3 id="notes-cleaning-up-after-a-run">Cleaning up after a run</h3>
         <p>Authorize as admin, then call <code>DELETE /Users?user=&lt;username&gt;</code> for each account you created. This deactivates the account rather than removing it: the row and its username stay, and the audit trail is kept. It keeps <code>GET /Users</code> tidy but does not free the username.</p>
 
-        <h3>How this guide is made</h3>
+        <h3 id="notes-how-this-guide-is-made">How this guide is made</h3>
         <p>It is generated from two files in the istSOS4 repository: <code>catalog.py</code>, which maps each test to the source it exercises, and <code>checks.py</code>, which holds the executable checks. Code excerpts are read from the working tree at build time, and a reference that no longer resolves fails the build. The page you are reading is rebuilt from that report by <code>tools/build.py</code> in this repository.</p>
 
-        <h3>Links</h3>
+        <h3 id="notes-links">Links</h3>
         <ul>
           <li><a href="https://github.com/KinshukSS2/istSOS-Swagger-Testing-Guide" target="_blank" rel="noopener">This guide&rsquo;s repository</a></li>
           <li><a href="https://github.com/istSOS/istSOS4" target="_blank" rel="noopener">istSOS4</a>, the server under test</li>
