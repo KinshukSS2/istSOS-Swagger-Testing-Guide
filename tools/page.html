@@ -13,24 +13,85 @@
 </style>
 </head>
 <body>
-<a class="skip" href="#run-swagger">Skip to Run Swagger</a>
+<a class="skip" href="#content">Skip to content</a>
 
 <header class="topbar">
-  <div class="wrap topbar-in">
-    <a class="mark" href="#top">istSOS4</a>
-    <nav aria-label="Sections">
-      <a href="#run-swagger">Run Swagger</a>
-      <a href="#test-features">Tests</a>
-      <a href="#reference">Reference</a>
-      <a href="https://github.com/KinshukSS2/istSOS-Swagger-Testing-Guide" target="_blank" rel="noopener">Source</a>
-    </nav>
+  <div class="topbar-in">
+    <button type="button" class="icon-btn menu-btn" id="menu-btn" aria-label="Open navigation" aria-controls="sidebar" aria-expanded="false"><span class="burger" aria-hidden="true"></span></button>
+    <a class="mark" href="#top">istSOS4 <span class="mark-sub">Swagger Guide</span></a>
+    <nav class="crumbs" id="crumbs" aria-label="You are here"></nav>
+    <div class="top-right">
+      <a class="top-link swg" href="%%SWAGGER_HREF%%" target="_blank" rel="noopener">Open Swagger</a>
+      <a class="top-link" href="https://github.com/KinshukSS2/istSOS-Swagger-Testing-Guide" target="_blank" rel="noopener">Source</a>
+      <button type="button" class="icon-btn" id="help-btn" aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">?</button>
+    </div>
   </div>
+  <div class="progress" aria-hidden="true"><span id="progress-bar"></span></div>
 </header>
 
-<main id="top">
-<div class="wrap">
+<div class="scrim" id="scrim" hidden></div>
 
+<div class="shell" id="top">
 
+<!-- ============================== SIDEBAR ============================== -->
+<aside class="sidebar" id="sidebar" aria-label="Guide navigation">
+  <div class="side-search">
+    <label class="sr" for="q">Search tests</label>
+    <div class="search-box">
+      <input id="q" type="search" placeholder="Search tests, endpoints…" autocomplete="off" spellcheck="false">
+      <kbd class="kbd-hint" aria-hidden="true">/</kbd>
+    </div>
+    <div class="chips" role="group" aria-label="Filter by method">
+      <button type="button" class="chip" data-filter="method" data-value="get" aria-pressed="false">GET</button>
+      <button type="button" class="chip" data-filter="method" data-value="post" aria-pressed="false">POST</button>
+      <button type="button" class="chip" data-filter="method" data-value="patch" aria-pressed="false">PATCH</button>
+      <button type="button" class="chip" data-filter="method" data-value="delete" aria-pressed="false">DELETE</button>
+      <button type="button" class="chip" data-filter="method" data-value="sql" aria-pressed="false">SQL</button>
+    </div>
+    <div class="chips" role="group" aria-label="Filter by role">
+      <button type="button" class="chip" data-filter="role" data-value="admin" aria-pressed="false">admin</button>
+      <button type="button" class="chip" data-filter="role" data-value="viewer" aria-pressed="false">viewer</button>
+      <button type="button" class="chip" data-filter="role" data-value="editor" aria-pressed="false">editor</button>
+      <button type="button" class="chip" data-filter="role" data-value="custom" aria-pressed="false">custom</button>
+      <button type="button" class="chip" data-filter="role" data-value="external" aria-pressed="false">external</button>
+      <button type="button" class="chip" data-filter="role" data-value="anonymous" aria-pressed="false">anonymous</button>
+    </div>
+    <p class="filter-status"><span id="count" aria-live="polite">%%N_TESTS%% tests</span><button type="button" class="linkbtn" id="clear-filters" hidden>Clear filters</button></p>
+    <a class="resume" id="resume" href="#" hidden></a>
+  </div>
+
+  <nav class="side-nav" id="side-nav" aria-label="Sections and tests">
+    <details class="nav-group" data-group="start" open>
+      <summary><span class="ng-k">Start here</span><span class="ng-count"></span></summary>
+      <ul>
+        <li><a class="nav-link" href="#run-swagger" data-id="run-swagger">Run Swagger</a></li>
+        <li><a class="nav-link" href="#glance" data-id="glance">All tests at a glance</a></li>
+      </ul>
+    </details>
+    %%NAV_TESTS%%
+    <details class="nav-group" data-group="reference">
+      <summary><a class="ng-link" href="#reference" data-id="reference"><span class="ng-k">Reference</span></a><span class="ng-count"></span></summary>
+      <ul>
+        <li><a class="nav-link" href="#overview" data-id="overview">Overview</a></li>
+        <li><a class="nav-link" href="#prerequisites" data-id="prerequisites">Prerequisites</a></li>
+        <li><a class="nav-link" href="#setup" data-id="setup">Setup</a></li>
+        <li><a class="nav-link" href="#authentication" data-id="authentication">Authentication</a></li>
+        <li><a class="nav-link" href="#implementation" data-id="implementation">Implementation details</a></li>
+        <li><a class="nav-link" href="#troubleshooting" data-id="troubleshooting">Troubleshooting</a></li>
+        <li><a class="nav-link" href="#notes" data-id="notes">Additional notes</a></li>
+      </ul>
+    </details>
+  </nav>
+
+  <div class="side-foot">
+    <label class="check"><input type="checkbox" id="lines" checked> Line numbers</label>
+    <button type="button" class="linkbtn" id="help-link">Shortcuts <kbd>?</kbd></button>
+  </div>
+</aside>
+
+<!-- ============================== MAIN ============================== -->
+<main class="main" id="content" tabindex="-1">
+<div class="main-in">
 
     <div class="title-block">
       <p class="kicker">istSOS4 · OGC SensorThings API</p>
@@ -84,40 +145,48 @@
             <li><span class="st st-4">401</span><span>A request to <code>/Datastreams</code> without a token answers <code>{"detail": "Not authenticated"}</code>.</span></li>
             <li><span class="st st-4">401</span><span>A signed-in viewer calling <code>GET /Users</code> gets <code>{"message": "Insufficient privileges."}</code>.</span></li>
           </ul>
-          <p class="aside">These are the exact responses recorded in tests A2, C2 and A6 below. From here, the test list shows what to try next.</p>
+          <p class="aside">These are the exact responses recorded in tests <a href="#a2">A2</a>, <a href="#c2">C2</a> and <a href="#a6">A6</a>. From here, the test list shows what to try next.</p>
         </li>
       </ol>
     </section>
 
 
-</div><!-- /wrap -->
 
-<!-- ============================== TESTS ============================== -->
-<section class="band" id="test-features" aria-labelledby="tests-h">
-  <div class="band-in">
-    <p class="kicker">The tests</p>
-    <h2 id="tests-h">Test features</h2>
-    <p class="band-dek">All %%N_TESTS%% tests, run against a live deployment. Every one has the exact steps to repeat it in Swagger, and behind <em>Implementation details</em> the code that makes it work.</p>
+    <!-- ============================== AT A GLANCE ============================== -->
+    <section class="glance" id="glance" aria-labelledby="glance-h">
+      <p class="kicker">Find a test fast</p>
+      <h2 id="glance-h">All tests at a glance</h2>
+      <p class="lead">Every test in one table. Pick a row to jump to its steps. The search box and filters in the sidebar narrow this table too.</p>
+      <div class="table-wrap"><table class="glance-table">
+        <thead><tr><th scope="col">ID</th><th scope="col">Method</th><th scope="col">Test and endpoint</th><th scope="col">Acting as</th><th scope="col">Expected</th><th scope="col"><span class="sr">Result</span></th></tr></thead>
+        <tbody id="glance-body">%%GLANCE_ROWS%%</tbody>
+      </table></div>
+    </section>
 
-    <ul class="contents" id="contents" aria-label="Tests by part">%%CONTENTS%%</ul>
+    <!-- ============================== TESTS ============================== -->
+    <section class="tests" id="test-features" aria-labelledby="tests-h">
+      <div class="tests-head">
+        <div>
+          <p class="kicker">The tests</p>
+          <h2 id="tests-h">Test features</h2>
+        </div>
+        <p class="tests-tools"><button type="button" class="linkbtn" id="expand-tests">Expand all</button><span class="sep" aria-hidden="true">/</span><button type="button" class="linkbtn" id="collapse-tests">Collapse all</button></p>
+      </div>
+      <p class="lead">All %%N_TESTS%% tests ran against a live deployment. Open a test to see how to repeat it in Swagger, then use the tabs for the code behind it, the recorded requests and the assertions.</p>
+      <p class="empty" id="empty" hidden>No tests match these filters. <button type="button" class="linkbtn" data-clear>Clear filters</button></p>
 
-    <div class="toolbar" role="toolbar" aria-label="Test list options">
-      <input id="q" type="search" placeholder="Filter tests" aria-label="Filter tests" autocomplete="off">
-      <div class="right"><label class="check"><input type="checkbox" id="lines" checked> Line numbers</label></div>
-    </div>
-    <p class="empty" id="empty" hidden>No tests match that filter.</p>
-
-    %%TESTS%%
-  </div>
-</section>
-
-<div class="wrap">
+      %%TESTS%%
+    </section>
 
     <!-- ============================== REFERENCE ============================== -->
-    <div class="sections-head" id="reference" role="group" aria-label="Section controls">
-      <span>Reference</span>
-      <span><button type="button" class="linkbtn" id="expand-all">Expand all</button><span class="sep" aria-hidden="true">/</span><button type="button" class="linkbtn" id="collapse-all">Collapse all</button></span>
-    </div>
+    <section class="reference" id="reference" aria-labelledby="ref-h">
+      <div class="tests-head">
+        <div>
+          <p class="kicker">Background</p>
+          <h2 id="ref-h">Reference</h2>
+        </div>
+        <p class="tests-tools"><button type="button" class="linkbtn" id="expand-all">Expand all</button><span class="sep" aria-hidden="true">/</span><button type="button" class="linkbtn" id="collapse-all">Collapse all</button></p>
+      </div>
 
     <details class="sec" id="overview">
       <summary><span><span class="sec-title">Overview</span><span class="sec-desc">What was tested, how, and against what</span></span><span class="chev" aria-hidden="true"></span></summary>
@@ -304,14 +373,47 @@
       </div>
     </details>
 
-</div><!-- /wrap -->
+    </section>
+
+    <footer class="colophon">
+      <p>Written by Kinshuk for Google Summer of Code 2026. Tested against istSOS4 at commit <a href="%%COMMIT_HREF%%" target="_blank" rel="noopener">%%COMMIT_SHORT%%</a>.</p>
+    </footer>
+</div>
 </main>
 
-<div class="wrap">
-  <footer class="colophon">
-    <p>Written by Kinshuk for Google Summer of Code 2026. Tested against istSOS4 at commit <a href="%%COMMIT_HREF%%" target="_blank" rel="noopener">%%COMMIT_SHORT%%</a>.</p>
-  </footer>
+<!-- ============================== RIGHT RAIL ============================== -->
+<aside class="rail" id="rail" aria-label="On this test">
+  <div class="rail-in" id="rail-in" hidden>
+    <p class="rail-k">On this test</p>
+    <p class="rail-title" id="rail-title"></p>
+    <ul class="rail-list" id="rail-list"></ul>
+    <button type="button" class="rail-copy" id="rail-copy">Copy link to this test</button>
+  </div>
+</aside>
 
+</div><!-- /shell -->
+
+<nav class="mobile-steps" id="mobile-steps" aria-label="Previous and next test" hidden>
+  <button type="button" id="m-prev">&larr; <span></span></button>
+  <button type="button" id="m-next"><span></span> &rarr;</button>
+</nav>
+
+<button type="button" class="to-top" id="to-top" aria-label="Back to top" hidden>&uarr;</button>
+
+<div class="overlay" id="help" role="dialog" aria-modal="true" aria-labelledby="help-h" hidden>
+  <div class="overlay-card">
+    <h2 id="help-h">Keyboard shortcuts</h2>
+    <dl class="keys">
+      <div><dt><kbd>/</kbd></dt><dd>Search tests</dd></div>
+      <div><dt><kbd>Esc</kbd></dt><dd>Clear search, close a panel</dd></div>
+      <div><dt><kbd>j</kbd> <kbd>k</kbd></dt><dd>Next / previous test</dd></div>
+      <div><dt><kbd>o</kbd> <kbd>Enter</kbd></dt><dd>Open or close the current test</dd></div>
+      <div><dt><kbd>1</kbd>&ndash;<kbd>5</kbd></dt><dd>Switch tab in the current test</dd></div>
+      <div><dt><kbd>&larr;</kbd> <kbd>&rarr;</kbd></dt><dd>Move between tabs when a tab is focused</dd></div>
+      <div><dt><kbd>?</kbd></dt><dd>Show this list</dd></div>
+    </dl>
+    <button type="button" class="btn" id="help-close">Close</button>
+  </div>
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
