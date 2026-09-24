@@ -147,8 +147,13 @@ for sec in soup.select("section.part"):
         if exch_html:
             parts_html.append(f'<h5>Request and response flow <span class="muted">({n_exch} recorded)</span></h5>{exch_html}')
         parts_html.append(f'<h5>Assertions</h5>{asserts}')
-        parts_html.append(f'<h5>Run it yourself in Swagger</h5>{sw_html}')
 
+        swagger_panel = (
+            f'<section class="swagger-panel" aria-label="Run {esc(tid)} in Swagger">'
+            f'<header><span class="sp-label">Run in Swagger</span>'
+            f'<a class="sp-open" href="{esc(swagger_href)}" target="_blank" rel="noopener">Open Swagger</a></header>'
+            f'{sw_html}</section>'
+        )
         endpoint = inner(c.select_one(".endpoint"))
         exp = inner(c.select_one(".outcome dd"))
         act = inner(c.select_one(".outcome .actual dd"))
@@ -160,9 +165,10 @@ for sec in soup.select("section.part"):
                 f'<article class="test" id="{c["id"]}" data-search="{esc(c["data-search"])}">'
                 f'<div class="test-meta"><span class="tid">{esc(tid)}</span><span class="verdict {status}">{status.capitalize()}</span></div>'
                 f'<h4>{esc(title)}</h4>'
-                f'<p class="sum">{inner(c.select_one(".card-sum"))}</p>'
                 f'<div class="endpoint">{endpoint}</div>'
-                f'<dl class="outcome"><dt>Expected</dt><dd>{exp}</dd><dt>Actual</dt><dd>{act}</dd></dl>'
+                f'<p class="sum">{inner(c.select_one(".card-sum"))}</p>'
+                f'<dl class="outcome"><div><dt>Expected</dt><dd>{exp}</dd></div><div class="actual"><dt>Actual</dt><dd>{act}</dd></div></dl>'
+                f'{swagger_panel}'
                 f'<details class="impl"><summary>Implementation details<span class="chev" aria-hidden="true"></span></summary>'
                 f'<div class="impl-body">{"".join(parts_html)}</div></details>'
                 f"</article>"
@@ -181,8 +187,9 @@ for p in parts.values():
     count = len(p["tests"])
     eyebrow = ("Setup" if p["short"] == "S" else p["key"]) + f" · {count} test{'s' if count != 1 else ''}"
     tests_html += (
-        f'<section class="part" id="part-{p["short"].lower()}"><header class="part-head"><p class="eyebrow">{esc(eyebrow)}</p>'
-        f'<h3>{esc(p["title"])}</h3><p class="part-intro">{p["intro"]}</p></header>'
+        f'<section class="part" id="part-{p["short"].lower()}"><header class="part-head"><span class="part-letter" aria-hidden="true">{esc(p["short"])}</span>'
+        f'<div><p class="eyebrow">{esc(eyebrow)}</p>'
+        f'<h3>{esc(p["title"])}</h3><p class="part-intro">{p["intro"]}</p></div></header>'
         + "".join(t["html"] for t in p["tests"])
         + "</section>"
     )

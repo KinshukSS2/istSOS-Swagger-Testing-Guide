@@ -69,12 +69,15 @@ The guide is laid out as an article rather than a dashboard.
 - **Run Swagger** comes first and is always open: what Swagger is, how to start
   istSOS4, where to open it, how to authorise, how to execute a request and what
   responses to expect.
-- Everything else is a collapsed section that opens on request: Overview,
-  Prerequisites, Setup, Authentication, Test features, Implementation details,
-  Troubleshooting and Additional notes.
-- Every test under Test features has an Implementation details block with the
-  explanation, the real source excerpts, the check that asserts it, the recorded
-  request and response, and the steps to repeat it in Swagger.
+- **Test features** is a full-width section of its own, with all 32 tests as
+  cards. Each card shows the colour-coded HTTP method, what was expected and what
+  came back, and a green *Run in Swagger* panel with the exact steps and request
+  body to repeat the test.
+- Each test also has a collapsed **Implementation details** block: the
+  explanation, the real source excerpts, the check that asserts it and the
+  recorded request and response.
+- Overview, Prerequisites, Setup, Authentication, Implementation details,
+  Troubleshooting and Additional notes sit below as collapsed sections.
 - Code is syntax-highlighted, can be copied, links to the exact commit on GitHub,
   and long excerpts are height-capped with a control to show them in full.
 - The page follows the system light or dark setting and works down to phone width.

@@ -15,17 +15,22 @@
 <body>
 <a class="skip" href="#run-swagger">Skip to Run Swagger</a>
 
-<div class="wrap">
-
-  <header class="masthead">
+<header class="topbar">
+  <div class="wrap topbar-in">
     <a class="mark" href="#top">istSOS4</a>
-    <nav aria-label="Elsewhere">
-      <a href="%%SWAGGER_HREF%%" target="_blank" rel="noopener">Swagger</a>
+    <nav aria-label="Sections">
+      <a href="#run-swagger">Run Swagger</a>
+      <a href="#test-features">Tests</a>
+      <a href="#reference">Reference</a>
       <a href="https://github.com/KinshukSS2/istSOS-Swagger-Testing-Guide" target="_blank" rel="noopener">Source</a>
     </nav>
-  </header>
+  </div>
+</header>
 
-  <main id="top">
+<main id="top">
+<div class="wrap">
+
+
 
     <div class="title-block">
       <p class="kicker">istSOS4 · OGC SensorThings API</p>
@@ -84,9 +89,33 @@
       </ol>
     </section>
 
-    <!-- ============================== SECTIONS ============================== -->
-    <div class="sections-head" role="group" aria-label="Section controls">
-      <span>Everything else</span>
+
+</div><!-- /wrap -->
+
+<!-- ============================== TESTS ============================== -->
+<section class="band" id="test-features" aria-labelledby="tests-h">
+  <div class="band-in">
+    <p class="kicker">The tests</p>
+    <h2 id="tests-h">Test features</h2>
+    <p class="band-dek">All %%N_TESTS%% tests, run against a live deployment. Every one has the exact steps to repeat it in Swagger, and behind <em>Implementation details</em> the code that makes it work.</p>
+
+    <ul class="contents" id="contents" aria-label="Tests by part">%%CONTENTS%%</ul>
+
+    <div class="toolbar" role="toolbar" aria-label="Test list options">
+      <input id="q" type="search" placeholder="Filter tests" aria-label="Filter tests" autocomplete="off">
+      <div class="right"><label class="check"><input type="checkbox" id="lines" checked> Line numbers</label></div>
+    </div>
+    <p class="empty" id="empty" hidden>No tests match that filter.</p>
+
+    %%TESTS%%
+  </div>
+</section>
+
+<div class="wrap">
+
+    <!-- ============================== REFERENCE ============================== -->
+    <div class="sections-head" id="reference" role="group" aria-label="Section controls">
+      <span>Reference</span>
       <span><button type="button" class="linkbtn" id="expand-all">Expand all</button><span class="sep" aria-hidden="true">/</span><button type="button" class="linkbtn" id="collapse-all">Collapse all</button></span>
     </div>
 
@@ -209,22 +238,7 @@
       </div>
     </details>
 
-    <details class="sec" id="test-features">
-      <summary><span><span class="sec-title">Test features</span><span class="sec-desc">All %%N_TESTS%% tests, each with the implementation behind it</span></span><span class="chev" aria-hidden="true"></span></summary>
-      <div class="sec-body">
-        <p>Each entry says what is checked, what was expected and what came back. Open <em>Implementation details</em> under any test to read how it works, the source code that does the work, the check that asserts it, and the recorded requests and responses.</p>
 
-        <ul class="contents" id="contents" aria-label="Tests by part">%%CONTENTS%%</ul>
-
-        <div class="toolbar" role="toolbar" aria-label="Test list options">
-          <input id="q" type="search" placeholder="Filter tests" aria-label="Filter tests" autocomplete="off">
-          <div class="right"><label class="check"><input type="checkbox" id="lines" checked> Line numbers</label></div>
-        </div>
-        <p class="empty" id="empty" hidden>No tests match that filter.</p>
-
-        %%TESTS%%
-      </div>
-    </details>
 
     <details class="sec" id="implementation">
       <summary><span><span class="sec-title">Implementation details</span><span class="sec-desc">Where the rules live, and an index of the source</span></span><span class="chev" aria-hidden="true"></span></summary>
@@ -290,8 +304,10 @@
       </div>
     </details>
 
-  </main>
+</div><!-- /wrap -->
+</main>
 
+<div class="wrap">
   <footer class="colophon">
     <p>Written by Kinshuk for Google Summer of Code 2026. Tested against istSOS4 at commit <a href="%%COMMIT_HREF%%" target="_blank" rel="noopener">%%COMMIT_SHORT%%</a>.</p>
   </footer>
