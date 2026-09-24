@@ -64,11 +64,20 @@ system.
 
 ## Reading the page
 
-- The filter box narrows the list as you type.
-- Expand all and Collapse all switch between the summary and full detail.
-- Line numbers can be toggled on the code excerpts.
-- The page is one self-contained `index.html` with no build step and works down
-  to phone width.
+The guide is laid out as an article rather than a dashboard.
+
+- **Run Swagger** comes first and is always open: what Swagger is, how to start
+  istSOS4, where to open it, how to authorise, how to execute a request and what
+  responses to expect.
+- Everything else is a collapsed section that opens on request: Overview,
+  Prerequisites, Setup, Authentication, Test features, Implementation details,
+  Troubleshooting and Additional notes.
+- Every test under Test features has an Implementation details block with the
+  explanation, the real source excerpts, the check that asserts it, the recorded
+  request and response, and the steps to repeat it in Swagger.
+- Code is syntax-highlighted, can be copied, links to the exact commit on GitHub,
+  and long excerpts are height-capped with a control to show them in full.
+- The page follows the system light or dark setting and works down to phone width.
 
 ## Running it locally
 
@@ -84,11 +93,24 @@ Then open `http://localhost:8000`. Opening `index.html` directly also works.
 
 ```
 .
-├── index.html          the complete guide
+├── index.html                the published guide, one self-contained file
+├── tools/
+│   ├── build.py              builds index.html
+│   ├── page.html             page template and prose
+│   ├── style.css             typography and layout
+│   ├── app.js                accordions, copy, filter
+│   └── report.source.html    generated test report used as build input
 ├── assets/
-│   └── banner.svg      header sheet for this README
-├── .nojekyll           serve files unmodified on GitHub Pages
+│   └── banner.svg            header sheet for this README
+├── .nojekyll                 serve files unmodified on GitHub Pages
 └── README.md
+```
+
+To rebuild after editing anything in `tools/`:
+
+```bash
+pip install beautifulsoup4 lxml
+python3 tools/build.py
 ```
 
 The site is served by GitHub Pages from the `main` branch and is rebuilt on

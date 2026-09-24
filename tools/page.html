@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>istSOS4 Swagger Guide</title>
+<meta name="description" content="A step-by-step guide to running Swagger for istSOS4 and testing its authentication, roles and row-level security, with the implementation behind every test.">
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap">
+<style>
+%%STYLE%%
+</style>
+</head>
+<body>
+<a class="skip" href="#run-swagger">Skip to Run Swagger</a>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <a class="mark" href="#top">istSOS4</a>
+    <nav aria-label="Elsewhere">
+      <a href="%%SWAGGER_HREF%%" target="_blank" rel="noopener">Swagger</a>
+      <a href="https://github.com/KinshukSS2/istSOS-Swagger-Testing-Guide" target="_blank" rel="noopener">Source</a>
+    </nav>
+  </header>
+
+  <main id="top">
+
+    <div class="title-block">
+      <p class="kicker">istSOS4 · OGC SensorThings API</p>
+      <h1>Swagger Guide</h1>
+      <p class="dek">Try istSOS4&rsquo;s authentication, roles and row-level security from the Swagger page, and read the code behind every result.</p>
+      <p class="byline"><span><b>Kinshuk</b></span><span>Google Summer of Code 2026</span><span>Verified %%LAST_RUN%%</span><span class="ok">%%N_PASSED%% of %%N_TESTS%% tests passing</span></p>
+    </div>
+
+    <!-- ============================== RUN SWAGGER ============================== -->
+    <section class="run" id="run-swagger" aria-labelledby="run-h">
+      <p class="kicker">Start here</p>
+      <h2 id="run-h">Run Swagger</h2>
+      <p class="lead">Swagger UI is the interactive documentation page that istSOS4 serves for its own API. Every endpoint is listed on it, and <em>Try it out</em> sends a real request from your browser and shows the response, so you can test the API without curl or Postman.</p>
+
+      <ol class="steps">
+        <li>
+          <h3>Start the application</h3>
+          <p>You need Git and Docker with the Compose plugin. The example environment file is already set up for testing, so change nothing on a first run.</p>
+          <figure class="code" data-kind="snippet">
+            <figcaption><span class="cap-title"><span class="sym">Terminal</span><span class="path">sh</span></span><span class="cap-tools"><button type="button" class="copy">Copy</button></span></figcaption>
+            <div class="code-body nolines" tabindex="0" role="region" aria-label="Start commands"><pre><code><span class="ln" data-n="1">git clone https://github.com/KinshukSS2/istSOS4.git</span><span class="ln" data-n="2">cd istSOS4</span><span class="ln" data-n="3">git checkout docs/swagger-api-documentation</span><span class="ln" data-n="4">cp .env.example .env</span><span class="ln" data-n="5">docker compose up -d --build</span></code></pre></div>
+          </figure>
+          <p>Give it about a minute while the database is created and the dummy data is generated. To watch progress, run <code>docker compose logs -f dummy_data</code>.</p>
+        </li>
+
+        <li>
+          <h3>Open Swagger</h3>
+          <p>Go to <a class="swagger-url" href="%%SWAGGER_HREF%%" target="_blank" rel="noopener">%%SWAGGER_HREF%%</a>. You should see the istSOS4 API page, with endpoint groups such as <em>Registration &amp; Approval</em>, <em>Users</em> and <em>Policies</em>.</p>
+        </li>
+
+        <li>
+          <h3>Authenticate</h3>
+          <p>Most endpoints need a token. Click the padlock button labelled <em>Authorize</em> at the top right and fill in the OAuth2 password form:</p>
+          <ul class="field-list">
+            <li><span class="f">username</span><span><code>admin</code></span></li>
+            <li><span class="f">password</span><span><code>admin</code>, or the <code>ISTSOS_ADMIN_PASSWORD</code> value in your <code>.env</code></span></li>
+            <li><span class="f">client_id, client_secret</span><span>leave both empty</span></li>
+          </ul>
+          <p>Click <em>Authorize</em>, then <em>Close</em>. The padlocks on the page now show as locked. Tokens are short-lived (five minutes by default), so if requests start returning <code>401</code> partway through, authorize again.</p>
+        </li>
+
+        <li>
+          <h3>Execute a request</h3>
+          <p>Expand an endpoint, click <em>Try it out</em>, fill in the parameters or the body, and click <em>Execute</em>. The status code, body and headers appear directly below. Always send requests this way. The <em>Request URL</em> link and the browser address bar can only send <code>GET</code>, so a <code>PATCH</code> or <code>POST</code> opened there fails with a <code>404</code> or <code>405</code> that looks like a bug and is not one.</p>
+        </li>
+
+        <li>
+          <h3>What you should see</h3>
+          <ul class="expect">
+            <li><span class="st st-2">200</span><span><code>POST /Login</code> with the admin credentials returns a bearer <code>access_token</code>.</span></li>
+            <li><span class="st st-4">401</span><span>A request to <code>/Datastreams</code> without a token answers <code>{"detail": "Not authenticated"}</code>.</span></li>
+            <li><span class="st st-4">401</span><span>A signed-in viewer calling <code>GET /Users</code> gets <code>{"message": "Insufficient privileges."}</code>.</span></li>
+          </ul>
+          <p class="aside">These are the exact responses recorded in tests A2, C2 and A6 below. From here, the test list shows what to try next.</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ============================== SECTIONS ============================== -->
+    <div class="sections-head" role="group" aria-label="Section controls">
+      <span>Everything else</span>
+      <span><button type="button" class="linkbtn" id="expand-all">Expand all</button><span class="sep" aria-hidden="true">/</span><button type="button" class="linkbtn" id="collapse-all">Collapse all</button></span>
+    </div>
+
+    <details class="sec" id="overview">
+      <summary><span><span class="sec-title">Overview</span><span class="sec-desc">What was tested, how, and against what</span></span><span class="chev" aria-hidden="true"></span></summary>
+      <div class="sec-body">
+        <p>istSOS4 is an open-source server for the OGC SensorThings API, which stores sensor observations. When authentication is switched on, every request is decided by two things: who is asking, and which Network the data belongs to. A wrong decision either leaks observations or locks out a legitimate user.</p>
+        <p>This guide exercises that decision layer end to end. All %%N_TESTS%% tests ran against a live deployment, and each records what it expected, what came back, and which lines of source produced the result. A claim about access control can therefore be checked against both the traffic and the code.</p>
+
+        <h3>What the tests cover</h3>
+        <ul>
+          <li><a href="#part-s">Setup</a>: what the deployment contains before anything is asserted.</li>
+          <li><a href="#part-a">Part A</a>: the life of a local account, from registration to deactivation.</li>
+          <li><a href="#part-b">Part B</a>: signing in through an external OpenID provider.</li>
+          <li><a href="#part-c">Part C</a>: what each role can see and change, enforced by PostgreSQL row-level security.</li>
+          <li><a href="#part-d">Part D</a>: a custom role whose access is granted row by row.</li>
+        </ul>
+
+        <h3>The recorded run</h3>
+        <div class="table-wrap"><table class="plain-table">
+          <tbody>
+            <tr><td>Result</td><td>%%N_PASSED%% of %%N_TESTS%% passed, none failed, none manual</td></tr>
+            <tr><td>Run</td><td>%%LAST_RUN%%</td></tr>
+            <tr><td>Code</td><td><code>docs/swagger-api-documentation</code> at <a href="%%COMMIT_HREF%%" target="_blank" rel="noopener">%%COMMIT_SHORT%%</a>, plus uncommitted changes</td></tr>
+            <tr><td>Traced</td><td>%%N_SOURCE%% source files</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </details>
+
+    <details class="sec" id="prerequisites">
+      <summary><span><span class="sec-title">Prerequisites</span><span class="sec-desc">What to have installed before you start</span></span><span class="chev" aria-hidden="true"></span></summary>
+      <div class="sec-body">
+        <ul>
+          <li><b>Git</b>, to clone the repository.</li>
+          <li><b>Docker with the Compose plugin</b>, so that <code>docker compose</code> works. Every image is built from the repository; nothing is pulled except base images.</li>
+          <li><b>Free ports.</b> The API answers on <code>8018</code> and PostgreSQL is published on <code>45432</code>. Both can be changed in <code>.env</code> (<code>EXTERNAL_PORT</code>, <code>POSTGRES_EXTERNAL_PORT</code>).</li>
+          <li><b>A modern browser</b> for Swagger UI.</li>
+          <li><b>Optional, for Part B:</b> a client id and secret from Google, GitHub, Microsoft, ORCID or SWITCH edu-ID if you want to complete a real external sign-in. Without them the API reports that provider as unconfigured, which is itself tested in B4.</li>
+        </ul>
+        <p>The admin password is whatever <code>ISTSOS_ADMIN_PASSWORD</code> is set to in your <code>.env</code>. If you are not sure what the running container uses, ask it:</p>
+        <figure class="code" data-kind="snippet">
+          <figcaption><span class="cap-title"><span class="sym">Terminal</span><span class="path">sh</span></span><span class="cap-tools"><button type="button" class="copy">Copy</button></span></figcaption>
+          <div class="code-body nolines" tabindex="0" role="region" aria-label="Read admin password"><pre><code><span class="ln" data-n="1">docker exec istsos4-api printenv ISTSOS_ADMIN_PASSWORD</span></code></pre></div>
+        </figure>
+      </div>
+    </details>
+
+    <details class="sec" id="setup">
+      <summary><span><span class="sec-title">Setup</span><span class="sec-desc">The settings that matter, and how to reset</span></span><span class="chev" aria-hidden="true"></span></summary>
+      <div class="sec-body">
+        <p><code>.env.example</code> ships with the right values for testing. These are the ones the tests depend on:</p>
+        <div class="table-wrap"><table class="plain-table">
+          <thead><tr><th>Setting</th><th>Value</th><th>Why it matters</th></tr></thead>
+          <tbody>
+            <tr><td><code>AUTHORIZATION</code></td><td><code>1</code></td><td>Authentication, roles and row-level security are only active when this is 1.</td></tr>
+            <tr><td><code>NETWORK</code></td><td><code>1</code></td><td>Creates the Network table and <code>Datastream.network_id</code>. Without it there is nothing to scope by.</td></tr>
+            <tr><td><code>ANONYMOUS_VIEWER</code></td><td><code>0</code></td><td>Anonymous requests are refused (test C2).</td></tr>
+            <tr><td><code>VERSIONING</code></td><td><code>1</code></td><td>Keeps the edit history behind <code>GET /Commits</code>.</td></tr>
+            <tr><td><code>DUMMY_DATA</code></td><td><code>1</code></td><td>Generates the sample Networks and Datastreams that the scoping tests act on.</td></tr>
+            <tr><td><code>REDIS</code></td><td><code>0</code></td><td>With 0, <code>POST /Logout</code> succeeds but the token keeps working until it expires. Set 1 to revoke it for real.</td></tr>
+          </tbody>
+        </table></div>
+        <p>Do not set <code>AUTHORIZATION</code> or <code>NETWORK</code> back to <code>0</code>, or none of the features in this guide are active.</p>
+
+        <h3>Make logout actually revoke</h3>
+        <p>Set <code>REDIS=1</code> in <code>.env</code>, then restart only the API. A logged-out token is then rejected with <code>401 "Token has been revoked"</code>. Tokens carry no unique id, so if you log in again within the same second as a logout you receive the same, still-revoked token. Wait a second.</p>
+        <figure class="code" data-kind="snippet">
+          <figcaption><span class="cap-title"><span class="sym">Terminal</span><span class="path">sh</span></span><span class="cap-tools"><button type="button" class="copy">Copy</button></span></figcaption>
+          <div class="code-body nolines" tabindex="0" role="region" aria-label="Restart API"><pre><code><span class="ln" data-n="1">docker compose up -d api</span></code></pre></div>
+        </figure>
+
+        <h3>Start again from a clean database</h3>
+        <p>Re-running <code>docker compose up</code> is safe, because the dummy-data generator skips itself when data exists. To wipe everything:</p>
+        <figure class="code" data-kind="snippet">
+          <figcaption><span class="cap-title"><span class="sym">Terminal</span><span class="path">sh</span></span><span class="cap-tools"><button type="button" class="copy">Copy</button></span></figcaption>
+          <div class="code-body nolines" tabindex="0" role="region" aria-label="Reset"><pre><code><span class="ln" data-n="1">docker compose down -v</span><span class="ln" data-n="2">docker compose up -d --build</span></code></pre></div>
+        </figure>
+
+        <h3>Configuration of the recorded run</h3>
+        <div class="table-wrap"><table class="plain-table"><tbody>%%FLAGS_ROWS%%</tbody></table></div>
+      </div>
+    </details>
+
+    <details class="sec" id="authentication">
+      <summary><span><span class="sec-title">Authentication</span><span class="sec-desc">Accounts, roles, tokens and external sign-in</span></span><span class="chev" aria-hidden="true"></span></summary>
+      <div class="sec-body">
+        <h3>The life of a local account</h3>
+        <p>Nobody gets access by registering. An application is held as <em>pending</em>, an administrator reviews it, and only approval turns it into a working account with a role.</p>
+        <ol>
+          <li><code>POST /Register</code> creates a pending account (<a href="#a1">A1</a>).</li>
+          <li>An administrator lists the queue with <code>GET /Users</code> (<a href="#a3">A3</a>).</li>
+          <li><code>PATCH /Users/{target_user_id}/policy-approval</code> grants the role (<a href="#a4">A4</a>).</li>
+          <li>The user signs in with <code>POST /Login</code> and receives a bearer token (<a href="#a5">A5</a>).</li>
+          <li>The token can be renewed with <code>POST /Refresh</code> (<a href="#a7">A7</a>) and ended with <code>POST /Logout</code> (<a href="#a10">A10</a>).</li>
+        </ol>
+
+        <h3>Roles</h3>
+        <div class="table-wrap"><table class="plain-table">
+          <thead><tr><th>Role</th><th>What it can do</th><th>Tests</th></tr></thead>
+          <tbody>
+            <tr><td>pending</td><td>Nothing yet. No database role is created.</td><td><a href="#a1">A1</a></td></tr>
+            <tr><td>viewer</td><td>Reads only the Datastreams and Observations of its own Network. Cannot write, even there.</td><td><a href="#c3">C3</a> <a href="#c4">C4</a> <a href="#c8">C8</a></td></tr>
+            <tr><td>editor</td><td>Creates and updates inside its own Network. Blocked outside it.</td><td><a href="#c6">C6</a> <a href="#c7">C7</a></td></tr>
+            <tr><td>custom</td><td>Starts with no access. An administrator grants rules per user, so read and write can differ row by row.</td><td><a href="#d1">D1</a> <a href="#d3">D3</a></td></tr>
+            <tr><td>admin</td><td>Sees every Network, and alone reads Policies and Commits.</td><td><a href="#c9">C9</a></td></tr>
+          </tbody>
+        </table></div>
+
+        <h3>Tokens</h3>
+        <p>Signing in returns a bearer token. Swagger&rsquo;s <em>Authorize</em> button attaches it to every request for you. Tokens expire after five minutes by default (<code>ACCESS_TOKEN_EXPIRE_MINUTES</code>).</p>
+
+        <h3>External sign-in</h3>
+        <p>Google, Microsoft, GitHub, ORCID and SWITCH edu-ID are supported. A provider only registers when both its client id and secret are set, so leaving a pair empty disables just that provider. The redirect URI to register with the provider is:</p>
+        <figure class="code" data-kind="snippet">
+          <figcaption><span class="cap-title"><span class="sym">Redirect URI</span><span class="path">template</span></span><span class="cap-tools"><button type="button" class="copy">Copy</button></span></figcaption>
+          <div class="code-body nolines" tabindex="0" role="region" aria-label="Redirect URI"><pre><code><span class="ln" data-n="1">{HOSTNAME}{SUBPATH}{VERSION}/auth/{provider}/callback</span></code></pre></div>
+        </figure>
+        <p>An external identity has no local password. It follows the same pending, approved, active lifecycle (<a href="#part-b">Part B</a>), and once active it behaves exactly like a local account with the same role (<a href="#c10">C10</a>).</p>
+      </div>
+    </details>
+
+    <details class="sec" id="test-features">
+      <summary><span><span class="sec-title">Test features</span><span class="sec-desc">All %%N_TESTS%% tests, each with the implementation behind it</span></span><span class="chev" aria-hidden="true"></span></summary>
+      <div class="sec-body">
+        <p>Each entry says what is checked, what was expected and what came back. Open <em>Implementation details</em> under any test to read how it works, the source code that does the work, the check that asserts it, and the recorded requests and responses.</p>
+
+        <ul class="contents" id="contents" aria-label="Tests by part">%%CONTENTS%%</ul>
+
+        <div class="toolbar" role="toolbar" aria-label="Test list options">
+          <input id="q" type="search" placeholder="Filter tests" aria-label="Filter tests" autocomplete="off">
+          <div class="right"><label class="check"><input type="checkbox" id="lines" checked> Line numbers</label></div>
+        </div>
+        <p class="empty" id="empty" hidden>No tests match that filter.</p>
+
+        %%TESTS%%
+      </div>
+    </details>
+
+    <details class="sec" id="implementation">
+      <summary><span><span class="sec-title">Implementation details</span><span class="sec-desc">Where the rules live, and an index of the source</span></span><span class="chev" aria-hidden="true"></span></summary>
+      <div class="sec-body">
+        <p>The rules are split across two layers, and the tests are written to prove which layer decides what.</p>
+        <dl class="definitions">
+          <dt>The API layer</dt>
+          <dd>FastAPI endpoints validate input with Pydantic models, check the token and the caller&rsquo;s role, and answer <code>401</code> or <code>403</code>. Registration, login, approval and role changes live here, and changes such as registration write an append-only audit row in the same transaction.</dd>
+          <dt>The database layer</dt>
+          <dd>Which rows a signed-in user can read or write is decided by PostgreSQL row-level security, not by the API. The recorded run had 42 <code>rbac_*</code> policies with row-level security on 9 tables (<a href="#c1">C1</a>). That is why a viewer&rsquo;s query for another Network&rsquo;s row returns <code>404</code>: the row does not exist for that user at all.</dd>
+        </dl>
+
+        <h3>Source index</h3>
+        <p>Every file the implementation excerpts come from, with the symbols used and the tests that exercise them. File names link to the exact commit.</p>
+        <div class="table-wrap"><table class="index">
+          <thead><tr><th>File</th><th>Symbols</th><th>Tests</th></tr></thead>
+          <tbody>%%SOURCE_INDEX_ROWS%%</tbody>
+        </table></div>
+      </div>
+    </details>
+
+    <details class="sec" id="troubleshooting">
+      <summary><span><span class="sec-title">Troubleshooting</span><span class="sec-desc">The problems people actually hit</span></span><span class="chev" aria-hidden="true"></span></summary>
+      <div class="sec-body">
+        <dl class="definitions">
+          <dt>Authorize answers 401</dt>
+          <dd>The username or password is wrong. Copy the password exactly, with no quotes and no trailing space. If you are unsure of it, read it from the container as shown under Prerequisites.</dd>
+          <dt>Authorize fails for a confusing reason</dt>
+          <dd>Something was typed into <code>client_secret</code>. The app does not use <code>client_id</code> or <code>client_secret</code>; leave both empty.</dd>
+          <dt>Requests turn into 401 halfway through</dt>
+          <dd>The token expired. Click <em>Authorize</em> again.</dd>
+          <dt>A PATCH, POST or DELETE gives 404 or 405 in a new tab</dt>
+          <dd>You opened the endpoint&rsquo;s URL in the browser, which sends <code>GET</code>. Send it with <em>Try it out</em> and <em>Execute</em> inside Swagger.</dd>
+          <dt>Lists come back empty, or the page will not load</dt>
+          <dd>The stack may still be starting. Follow <code>docker compose logs -f dummy_data</code> until the generator finishes.</dd>
+          <dt>Logout succeeds but the token still works</dt>
+          <dd><code>REDIS</code> is 0. See <em>Setup</em> to turn revocation on.</dd>
+          <dt>Registration says the username is taken</dt>
+          <dd>In the tested build, deactivating a user keeps the row and its username, so a name cannot be reused. Add a suffix such as <code>demo_alice_2</code> for each run.</dd>
+          <dt>An external login answers 404</dt>
+          <dd>That provider has no client id and secret configured. Set both in <code>.env</code> and restart the API.</dd>
+          <dt>Auth features seem to be switched off</dt>
+          <dd>Check that <code>AUTHORIZATION</code> and <code>NETWORK</code> are both <code>1</code> in <code>.env</code>, then run <code>docker compose up -d --build</code>.</dd>
+        </dl>
+      </div>
+    </details>
+
+    <details class="sec" id="notes">
+      <summary><span><span class="sec-title">Additional notes</span><span class="sec-desc">Cleaning up, provenance and links</span></span><span class="chev" aria-hidden="true"></span></summary>
+      <div class="sec-body">
+        <h3>Cleaning up after a run</h3>
+        <p>Authorize as admin, then call <code>DELETE /Users?user=&lt;username&gt;</code> for each account you created. This deactivates the account rather than removing it: the row and its username stay, and the audit trail is kept. It keeps <code>GET /Users</code> tidy but does not free the username.</p>
+
+        <h3>How this guide is made</h3>
+        <p>It is generated from two files in the istSOS4 repository: <code>catalog.py</code>, which maps each test to the source it exercises, and <code>checks.py</code>, which holds the executable checks. Code excerpts are read from the working tree at build time, and a reference that no longer resolves fails the build. The page you are reading is rebuilt from that report by <code>tools/build.py</code> in this repository.</p>
+
+        <h3>Links</h3>
+        <ul>
+          <li><a href="https://github.com/KinshukSS2/istSOS-Swagger-Testing-Guide" target="_blank" rel="noopener">This guide&rsquo;s repository</a></li>
+          <li><a href="https://github.com/istSOS/istSOS4" target="_blank" rel="noopener">istSOS4</a>, the server under test</li>
+          <li><a href="https://www.ogc.org/standards/sensorthings/" target="_blank" rel="noopener">OGC SensorThings API</a>, the standard it implements</li>
+        </ul>
+      </div>
+    </details>
+
+  </main>
+
+  <footer class="colophon">
+    <p>Written by Kinshuk for Google Summer of Code 2026. Tested against istSOS4 at commit <a href="%%COMMIT_HREF%%" target="_blank" rel="noopener">%%COMMIT_SHORT%%</a>.</p>
+  </footer>
+
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+%%TEMPLATES%%
+<script>
+%%SCRIPT%%
+</script>
+</body>
+</html>
