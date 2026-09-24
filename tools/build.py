@@ -305,7 +305,7 @@ for pid, p in parts.items():
         roles = " ".join(f'<span class="role">{r}</span>' for r in t["roles"])
         codes = " ".join(f'<span class="st st-{c[0]}">{c}</span>' for c in t["codes"]) or '<span class="muted">—</span>'
         glance_rows += (
-            f'<tr data-id="{t["id"]}"><td><a class="g-id" href="#{t["id"]}">{esc(t["tid"])}</a></td>'
+            f'<tr data-id="{t["id"]}" data-part="{t["part"]}"><td><a class="g-id" href="#{t["id"]}">{esc(t["tid"])}</a></td>'
             f'<td class="g-m">{t["badges"]}</td>'
             f'<td><a class="g-title" href="#{t["id"]}">{esc(t["title"])}</a><code class="g-ep">{esc(t["path"])}</code></td>'
             f'<td class="g-roles">{roles}</td><td class="g-codes">{codes}</td>'
